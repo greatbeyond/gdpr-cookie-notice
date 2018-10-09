@@ -48,7 +48,7 @@ gulp.task('styles:sass', function () {
 });
 
 gulp.task('javascript', function () {
-    return gulp.src(['node_modules/js-cookie/src/js.cookie.js', 'src/js/templates.js','src/js/script.js', 'src/langs/en.js',])
+    return gulp.src(['node_modules/js-cookie/src/js.cookie.js', 'src/js/templates.js','src/js/script.js', 'src/langs/en.js','src/langs/sv.js'])
     .pipe(sourcemaps.init())
     .pipe(concat('script.js'))
     .pipe(uglify())
