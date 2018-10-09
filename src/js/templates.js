@@ -4,8 +4,8 @@ window["gdpr-cookie-notice-templates"] = {};
 window["gdpr-cookie-notice-templates"]["bar.html"] = "<div class=\"gdpr-cookie-notice\">\n" +
     "  <p class=\"gdpr-cookie-notice-description\">{description}</p>\n" +
     "  <nav class=\"gdpr-cookie-notice-nav\">\n" +
-    "    <a href=\"#\" class=\"gdpr-cookie-notice-nav-item gdpr-cookie-notice-nav-item-settings\">{settings}</a>\n" +
-    "    <a href=\"#\" class=\"gdpr-cookie-notice-nav-item gdpr-cookie-notice-nav-item-accept gdpr-cookie-notice-nav-item-btn\">{accept}</a>\n" +
+    "    <a href=\"%23\" class=\"gdpr-cookie-notice-nav-item gdpr-cookie-notice-nav-item-settings\">{settings}</a>\n" +
+    "    <a href=\"%23\" class=\"gdpr-cookie-notice-nav-item gdpr-cookie-notice-nav-item-accept gdpr-cookie-notice-nav-item-btn\">{accept}</a>\n" +
     "  </nav>\n" +
     "</div>\n" +
     ""; 
@@ -28,8 +28,8 @@ window["gdpr-cookie-notice-templates"]["modal.html"] = "<div class=\"gdpr-cookie
     "    </div>\n" +
     "    <ul class=\"gdpr-cookie-notice-modal-cookies\"></ul>\n" +
     "    <div class=\"gdpr-cookie-notice-modal-footer\">\n" +
-    "      <a href=\"#\" class=\"gdpr-cookie-notice-modal-footer-item gdpr-cookie-notice-modal-footer-item-statement\">{statement}</a>\n" +
-    "      <a href=\"#\" class=\"gdpr-cookie-notice-modal-footer-item gdpr-cookie-notice-modal-footer-item-save gdpr-cookie-notice-modal-footer-item-btn\"><span>{save}</span></a>\n" +
+    "      <a href=\"%23\" class=\"gdpr-cookie-notice-modal-footer-item gdpr-cookie-notice-modal-footer-item-statement\">{statement}</a>\n" +
+    "      <a href=\"%23\" class=\"gdpr-cookie-notice-modal-footer-item gdpr-cookie-notice-modal-footer-item-save gdpr-cookie-notice-modal-footer-item-btn\"><span>{save}</span></a>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "</div>\n" +
