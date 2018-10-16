@@ -20,13 +20,16 @@ var config = {
     javascript: {
         path: {
             src: path.join('src/js'),
-            dist: path.join('dist')
+            dist: path.join('dist'),
+            distWP: path.join('wp/gdpr-cookie-notice/dist'),
+
         }
     },
     sass: {
         path: {
             src: path.join('src/sass'),
-            dist: path.join('dist')
+            dist: path.join('dist'),
+            distWP: path.join('wp/gdpr-cookie-notice/dist'),
         }
     }
 };
@@ -38,13 +41,14 @@ var onJSError = function (err) {
 };
 
 gulp.task('styles:sass', function () {
-
     return gulp.src(path.join(config.sass.path.src, '**', '*.scss'))
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
         .pipe(autoprefixer())
+        .pipe(gulp.dest(config.sass.path.distWP))
         .pipe(sourcemaps.write("./"))
         .pipe(gulp.dest(config.sass.path.dist));
+
 });
 
 gulp.task('javascript', function () {
@@ -52,8 +56,10 @@ gulp.task('javascript', function () {
     .pipe(sourcemaps.init())
     .pipe(concat('script.js'))
     .pipe(uglify())
+    .pipe(gulp.dest(config.javascript.path.distWP))
     .pipe(sourcemaps.write("./"))
-    .pipe(gulp.dest(config.javascript.path.dist))
+    .pipe(gulp.dest(config.javascript.path.dist));
+
 });
 
 gulp.task("watch:sass", function () {
@@ -96,4 +102,9 @@ gulp.task('default', ['lint'], function () {
     gulp.start('watch:sass');
     gulp.start('views:compile');
     gulp.start('watch:javascript');
+});
+
+gulp.task('build', ['lint'], function () {
+    gulp.start('javascript');
+    gulp.start('styles:sass');
 });
