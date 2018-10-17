@@ -78,10 +78,15 @@ function gdprCookieNotice(config) {
     var value = {
       date: new Date(),
       necessary: true,
-      performance: true,
-      analytics: true,
-      marketing: true
+      performance: false,
+      analytics: false,
+      marketing: false
     };
+
+    // Only true for defined in config
+    for (var i = 0; i < categories.length; i++) {
+      if ( config[categories[i]] ) value[categories[i]] = true;
+    }
 
     // If request was coming from the modal, check for the settings
     if(save) {
