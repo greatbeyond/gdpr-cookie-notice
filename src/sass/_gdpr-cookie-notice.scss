@@ -1,5 +1,7 @@
+$primary: #e21f3d !default;
+
 $bar_bg: rgb(51,51,51);
-$bar_primary: #e21f3d;
+$bar_primary: $primary;
 $bar_text: rgba(255,255,255,0.75);
 $bar_link: rgb(255,255,255);
 
@@ -9,7 +11,7 @@ $modal_footer: rgb(244,245,247);
 $modal_title: rgba(0,0,0,0.8);
 $modal_text: rgba(0,0,0,0.5);
 $modal_icon: rgb(189,189,189);
-$modal_primary: #e21f3d;
+$modal_primary: $primary;
 
 $icon_checkmark: 'data:image/svg+xml;utf8,<svg height="11" viewBox="0 0 14 11" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m5 10.42-5-5 1.41-1.41 3.59 3.58 7.59-7.59 1.41 1.42z" fill="rgb(255,255,255)" fill-rule="evenodd"/></svg>';
 $icon_caret: 'data:image/svg+xml;utf8,<svg height="12" viewBox="0 0 8 12" width="8" xmlns="http://www.w3.org/2000/svg"><path d="m1.41 0-1.41 1.41 4.58 4.59-4.58 4.59 1.41 1.41 6-6z" fill="'+$bar_primary+'"/></svg>';
