@@ -15,12 +15,12 @@ class GDPRCookieNotice
 {
     public $fields = [
         [
-            'name' => 'ga',
+            'name' => 'ga-id',
             'label' => 'Google Analytics ID',
             'type' => 'input'
         ],
         [
-            'name' => 'px',
+            'name' => 'px-id',
             'label' => 'Facebook Pixel ID',
             'type' => 'input'
         ],
@@ -76,7 +76,7 @@ class GDPRCookieNotice
         return get_option($this->prefixer($key));
     }
 
-    public function update_option($key, $valie)
+    public function update_option($key, $value)
     {
         return update_option($this->prefixer($key), $value);
     }
@@ -132,27 +132,72 @@ class GDPRCookieNotice
 
     public function footer_scripts()
     {
+        $iso_locale = substr(get_bloginfo('language'), 0, 2);
         $policy_url = $this->get_option('policy-url');
+        $ga_id = $this->get_option('ga-id');
+        $px_id = $this->get_option('px-id');
+
+        $description = $this->get_option('description');
+        $cookie_essential_desc = $this->get_option('cookie_essential_desc');
+        $cookie_performance_desc = $this->get_option('cookie_performance_desc');
+        $cookie_analytics_desc = $this->get_option('cookie_analytics_desc');
+        $cookie_marketing_desc = $this->get_option('cookie_marketing_desc');
+
+
 
         if ($policy_url) {
             ?>
-
             <script type="text/javascript">
+                <?= ($description) ? "gdprCookieNoticeLocales.".$iso_locale.".description = '".$description."';" : '' ?>
+                <?= ($cookie_essential_desc) ? "gdprCookieNoticeLocales.".$iso_locale.".cookie_essential_desc = '".$cookie_essential_desc."';" : '' ?>
+                <?= ($cookie_performance_desc) ? "gdprCookieNoticeLocales.".$iso_locale.".cookie_performance_desc = '".$cookie_performance_desc."';" : '' ?>
+                <?= ($cookie_analytics_desc) ? "gdprCookieNoticeLocales.".$iso_locale.".cookie_analytics_desc = '".$cookie_analytics_desc."';" : '' ?>
+                <?= ($cookie_marketing_desc) ? "gdprCookieNoticeLocales.".$iso_locale.".cookie_marketing_desc = '".$cookie_marketing_desc."';" : '' ?>
+
                 gdprCookieNotice({
-                statement: '<?= $policy_url ?>',
-                locale: '<?= substr(get_bloginfo('language'), 0, 2) ?>',
-                alwaysHide: true,
-                analytics: ['gtag'],
-                optOut: ['analytics']
+                    statement: '<?= $policy_url ?>',
+                    locale: '<?= $iso_locale ?>',
+                    alwaysHide: true,
+                    <?= ($ga_id) ? "analytics: ['ga']," : '' ?>
+                    <?= ($px_id) ? "marketing: ['px']," : '' ?>
+                    optOut: ['analytics']
                 });
                 document.addEventListener('gdprCookiesEvent', function (e) {
+                    <?php if ($px_id) : ?>
                     if (e.detail.marketing) {
-                        console.log('marketing scripts loaded');
+                        console.log('marketing scripts enabled');
+                        !function(f,b,e,v,n,t,s)
+                        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                        n.queue=[];t=b.createElement(e);t.async=!0;
+                        t.src=v;s=b.getElementsByTagName(e)[0];
+                        s.parentNode.insertBefore(t,s)}(window, document,'script',
+                        'https://connect.facebook.net/en_US/fbevents.js');
+                        fbq('init', '<?= $px_id ?>');
+                        fbq('track', 'PageView');
+                    } else {
+                        console.log('marketing scripts disabled');
                     }
-                    if (e.detail.analytics) {
-                        console.log('analytics scripts loaded');
+                    <?php endif; ?>
 
+                    <?php if ($ga_id) : ?>
+                    if (e.detail.analytics === true) {
+                        var gtagScript = document.createElement("script");
+                            gtagScript.type = "text/javascript";
+                            gtagScript.setAttribute("async", "true");
+                            gtagScript.setAttribute("src", "https://www.googletagmanager.com/gtag/js?id=<?= $ga_id ?>");
+                            document.documentElement.firstChild.appendChild(gtagScript);
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag() { dataLayer.push(arguments); }
+                        gtag('js', new Date());
+                        gtag('config', '<?= $ga_id ?>', { 'anonymize_ip': true });
+                        console.log('analytics scripts enabled');
+                    } else {
+                        window['ga-disable-<?= $ga_id ?>'] = true;
+                        console.log('analytics scripts disabled');
                     }
+                    <?php endif; ?>
                 });
             </script>
 
