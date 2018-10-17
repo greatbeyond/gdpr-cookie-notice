@@ -21,7 +21,6 @@ var config = {
         path: {
             src: path.join('src/js'),
             dist: path.join('dist'),
-            distWP: path.join('wp/gdpr-cookie-notice/dist'),
 
         }
     },
@@ -29,7 +28,6 @@ var config = {
         path: {
             src: path.join('src/sass'),
             dist: path.join('dist'),
-            distWP: path.join('wp/gdpr-cookie-notice/dist'),
         }
     }
 };
@@ -45,7 +43,6 @@ gulp.task('styles:sass', function () {
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
         .pipe(autoprefixer())
-        .pipe(gulp.dest(config.sass.path.distWP))
         .pipe(sourcemaps.write("./"))
         .pipe(gulp.dest(config.sass.path.dist));
 
@@ -56,7 +53,6 @@ gulp.task('javascript', function () {
     .pipe(sourcemaps.init())
     .pipe(concat('script.js'))
     .pipe(uglify())
-    .pipe(gulp.dest(config.javascript.path.distWP))
     .pipe(sourcemaps.write("./"))
     .pipe(gulp.dest(config.javascript.path.dist));
 
