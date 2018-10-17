@@ -121,7 +121,7 @@ class GDPRCookieNotice
                                     <input name="<?= $this->prefix.'['.$field['name'].']'  ?>" type="text" id="<?= $field['name']  ?>" value="<?= $this->get_option($field['name']); ?>" class="regular-text">
                                 <?php endif; ?>
                                 <?php if ($field['type'] === 'textarea') : ?>
-                                    <textarea rows="5" name="<?= $this->prefix.'['.$field['name'].']'  ?>" id="<?= $field['name']  ?>" value="<?= $this->get_option($field['name']); ?>" class="regular-text"></textarea>
+                                    <textarea rows="5" name="<?= $this->prefix.'['.$field['name'].']'  ?>" id="<?= $field['name']  ?>" class="regular-text"><?= $this->get_option($field['name']); ?></textarea>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -148,7 +148,6 @@ class GDPRCookieNotice
         $cookie_analytics_desc = $this->get_option('cookie_analytics_desc');
         $cookie_marketing_desc = $this->get_option('cookie_marketing_desc');
 
-
         $color = $this->get_option('color');
         $css = file_get_contents(dirname(__FILE__).'/dist/style.css');
         if ($color) {
@@ -171,30 +170,9 @@ class GDPRCookieNotice
                     alwaysHide: true,
                     <?= ($ga_id) ? "analytics: ['ga']," : '' ?>
                     <?= ($px_id) ? "marketing: ['px']," : '' ?>
-                    optOut: ['analytics']
                 });
-                document.addEventListener('gdprCookiesEvent', function (e) {
-                    <?php if ($px_id) : ?>
-                    if (e.detail.marketing) {
-                        console.log('marketing scripts enabled');
-                        !function(f,b,e,v,n,t,s)
-                        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                        n.queue=[];t=b.createElement(e);t.async=!0;
-                        t.src=v;s=b.getElementsByTagName(e)[0];
-                        s.parentNode.insertBefore(t,s)}(window, document,'script',
-                        'https://connect.facebook.net/en_US/fbevents.js');
-                        fbq('init', '<?= $px_id ?>');
-                        fbq('track', 'PageView');
-                    } else {
-                        console.log('marketing scripts disabled');
-                    }
-                    <?php endif; ?>
-
-                    <?php if ($ga_id) : ?>
-                    if (e.detail.analytics === true) {
-                        var gtagScript = document.createElement("script");
+                <?php if ($ga_id) : ?>
+                    var gtagScript = document.createElement("script");
                             gtagScript.type = "text/javascript";
                             gtagScript.setAttribute("async", "true");
                             gtagScript.setAttribute("src", "https://www.googletagmanager.com/gtag/js?id=<?= $ga_id ?>");
@@ -202,12 +180,26 @@ class GDPRCookieNotice
                         window.dataLayer = window.dataLayer || [];
                         function gtag() { dataLayer.push(arguments); }
                         gtag('js', new Date());
-                        gtag('config', '<?= $ga_id ?>', { 'anonymize_ip': true });
-                        console.log('analytics scripts enabled');
-                    } else {
-                        window['ga-disable-<?= $ga_id ?>'] = true;
-                        console.log('analytics scripts disabled');
-                    }
+                <?php endif; ?>
+                document.addEventListener('gdprCookiesEvent', function (e) {
+                    console.log(e.detail);
+                    <?php if ($px_id) : ?>
+                        if (e.detail.marketing) {
+                            !function(f,b,e,v,n,t,s)
+                            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                            n.queue=[];t=b.createElement(e);t.async=!0;
+                            t.src=v;s=b.getElementsByTagName(e)[0];
+                            s.parentNode.insertBefore(t,s)}(window, document,'script',
+                            'https://connect.facebook.net/en_US/fbevents.js');
+                            fbq('init', '<?= $px_id ?>');
+                            fbq('track', 'PageView');
+                        }
+                    <?php endif; ?>
+                    <?php if ($ga_id) : ?>
+                        console.log({ 'anonymize_ip': !e.detail.analytics });
+                        gtag('config', '<?= $ga_id ?>', { 'anonymize_ip': !e.detail.analytics });
                     <?php endif; ?>
                 });
             </script>

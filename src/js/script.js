@@ -32,9 +32,7 @@ function gdprCookieNotice(config) {
       acceptOnScroll();
     }
 
-    if(config.optOut){
-      optOutEvent();
-    }
+    optOutEvent();
 
   } else {
     deleteCookies(currentCookieSelection);
@@ -114,9 +112,10 @@ function gdprCookieNotice(config) {
       marketing: false
     };
 
-
-    for (var i = 0; i < config.optOut.length; i++) {
-      value[config.optOut[i]] = true;
+    if ( config.optOut ) {
+      for (var i = 0; i < config.optOut.length; i++) {
+        value[config.optOut[i]] = true;
+      }
     }
 
     cookiesAcceptedEvent = new CustomEvent('gdprCookiesEvent', {detail: value});
