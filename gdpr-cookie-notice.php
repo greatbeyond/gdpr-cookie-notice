@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: GDPR Cookie Notice
+Plugin Name: GDPR Cookie Notice WP Plugin
 Plugin URI:
 description:
 Version: 1.0
@@ -14,6 +14,11 @@ License: MIT
 class GDPRCookieNotice
 {
     public $fields = [
+        [
+            'name' => 'color',
+            'label' => 'Color',
+            'type' => 'input'
+        ],
         [
             'name' => 'ga-id',
             'label' => 'Google Analytics ID',
@@ -83,7 +88,7 @@ class GDPRCookieNotice
 
     public function enqueue()
     {
-        wp_enqueue_style($this->prefixer('style'), plugin_dir_url(__FILE__). 'dist/style.css');
+        // wp_enqueue_style($this->prefixer('style'), plugin_dir_url(__FILE__). 'dist/style.css');
         wp_enqueue_script($this->prefixer('script'), plugin_dir_url(__FILE__). 'dist/script.js');
     }
 
@@ -144,6 +149,12 @@ class GDPRCookieNotice
         $cookie_marketing_desc = $this->get_option('cookie_marketing_desc');
 
 
+        $color = $this->get_option('color');
+        $css = file_get_contents(dirname(__FILE__).'/dist/style.css');
+        if ($color) {
+            $css = str_replace('#101010', $color, $css);
+        }
+        echo '<style>'.$css.'</style>';
 
         if ($policy_url) {
             ?>
