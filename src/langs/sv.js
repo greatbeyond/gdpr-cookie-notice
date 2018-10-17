@@ -1,7 +1,7 @@
 //Add strings
 gdprCookieNoticeLocales.sv = {
-  description: "Vi använder cookies för att ge dig en bättre webbupplevelse och för att mäta hur webbplatsen används. Läs mer genom att klicka på ”Inställningar”.",
-  settings: "Inställningar",
+  description: "Vi använder cookies för att ge dig en bättre webbupplevelse och för att mäta hur webbplatsen används. Läs mer genom att klicka på ”Anpassa”.",
+  settings: "Anpassa",
   accept: "Godkänn",
   statement: "Läs våra integritetspolicy",
   save: "Spara",
