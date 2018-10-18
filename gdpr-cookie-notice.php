@@ -174,14 +174,14 @@ class GDPRCookieNotice
                     <?= ($px_id) ? "marketing: ['px']," : '' ?>
                 });
                 <?php if ($ga_id) : ?>
-                    var gtagScript = document.createElement("script");
-                            gtagScript.type = "text/javascript";
-                            gtagScript.setAttribute("async", "true");
-                            gtagScript.setAttribute("src", "https://www.googletagmanager.com/gtag/js?id=<?= $ga_id ?>");
-                            document.documentElement.firstChild.appendChild(gtagScript);
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag() { dataLayer.push(arguments); }
-                        gtag('js', new Date());
+                    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+                    ga('create', '<?= $ga_id ?>', 'auto');
+
+
                 <?php endif; ?>
                 document.addEventListener('gdprCookiesEvent', function (e) {
                     console.log(e.detail);
@@ -200,8 +200,7 @@ class GDPRCookieNotice
                         }
                     <?php endif; ?>
                     <?php if ($ga_id) : ?>
-                        console.log({ 'anonymize_ip': !e.detail.analytics });
-                        gtag('config', '<?= $ga_id ?>', { 'anonymize_ip': !e.detail.analytics });
+                        ga('send', 'pageview', {'anonymizeIp': !e.detail.analytics});
                     <?php endif; ?>
                 });
             </script>
