@@ -14,11 +14,11 @@ License: MIT
 class GDPRCookieNotice
 {
     public $fields = [
-        [
-            'name' => 'color',
-            'label' => 'Color',
-            'type' => 'input'
-        ],
+        // [
+        //     'name' => 'color',
+        //     'label' => 'Color',
+        //     'type' => 'input'
+        // ],
         [
             'name' => 'ga-id',
             'label' => 'Google Analytics ID',
@@ -88,7 +88,7 @@ class GDPRCookieNotice
 
     public function enqueue()
     {
-        // wp_enqueue_style($this->prefixer('style'), plugin_dir_url(__FILE__). 'dist/style.css');
+        wp_enqueue_style($this->prefixer('style'), plugin_dir_url(__FILE__). 'dist/style.css');
         wp_enqueue_script($this->prefixer('script'), plugin_dir_url(__FILE__). 'dist/script.js');
     }
 
@@ -101,7 +101,6 @@ class GDPRCookieNotice
     {
         $this->save(); ?>
             <h1>GDPR Cookie Notice</h1>
-
 
 
             <form method="post">
@@ -148,12 +147,15 @@ class GDPRCookieNotice
         $cookie_analytics_desc = $this->get_option('cookie_analytics_desc');
         $cookie_marketing_desc = $this->get_option('cookie_marketing_desc');
 
-        $color = $this->get_option('color');
-        $css = file_get_contents(dirname(__FILE__).'/dist/style.css');
-        if ($color) {
-            $css = str_replace('#101010', $color, $css);
-        }
-        echo '<style>'.$css.'</style>';
+
+        // @TODO Dynamic color needs cache
+
+        // $color = $this->get_option('color');
+        // $css = file_get_contents(dirname(__FILE__).'/dist/style.css');
+        // if ($color) {
+        //     $css = str_replace('#101010', $color, $css);
+        // }
+        // echo '<style>'.$css.'</style>';
 
         if ($policy_url) {
             ?>
