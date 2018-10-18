@@ -1,6 +1,6 @@
 $primary: #101010 !default;
+$bar_bg: rgb(51,51,51) !default;
 
-$bar_bg: rgb(51,51,51);
 $bar_primary: $primary;
 $bar_text: rgba(255,255,255,0.75);
 $bar_link: rgb(255,255,255);
@@ -117,7 +117,6 @@ $icon_caret: 'data:image/svg+xml;utf8,<svg height="12" viewBox="0 0 8 12" width=
     }
 
     &-title {
-      font-family: SanFranciscoText-Semibold;
       font-size: 18px;
       color: $modal_title;
       font-weight: 600;
