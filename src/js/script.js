@@ -19,7 +19,9 @@ function gdprCookieNotice(config) {
 
   // Get the users current cookie selection
   var currentCookieSelection = getCookie();
-  var cookiesAcceptedEvent = new CustomEvent('gdprCookiesEnabled', {detail: currentCookieSelection});
+  var cookiesAcceptedEvent = new CustomEvent('gdprCookiesEvent', {detail: currentCookieSelection});
+
+
 
   // Show cookie bar if needed
   if(!currentCookieSelection) {
@@ -29,9 +31,14 @@ function gdprCookieNotice(config) {
     if(config.implicit) {
       acceptOnScroll();
     }
+
+    optOutEvent();
+
   } else {
     deleteCookies(currentCookieSelection);
-    document.dispatchEvent(cookiesAcceptedEvent);
+    setTimeout(function() {
+      document.dispatchEvent(cookiesAcceptedEvent);
+    }, 1);
   }
 
   // Get gdpr cookie notice stored value
@@ -52,7 +59,7 @@ function gdprCookieNotice(config) {
     }
 
     // Show the notice if not all categories are enabled
-    if(notAllEnabled) {
+    if(notAllEnabled && !config.alwaysHide) {
       showNotice();
     } else {
       hideNotice();
@@ -69,23 +76,53 @@ function gdprCookieNotice(config) {
     var value = {
       date: new Date(),
       necessary: true,
-      performance: true,
-      analytics: true,
-      marketing: true
+      performance: false,
+      analytics: false,
+      marketing: false
     };
+
+    // Only true for defined in config
+    for (var i = 0; i < categories.length; i++) {
+      if ( config[categories[i]] ) value[categories[i]] = true;
+    }
 
     // If request was coming from the modal, check for the settings
     if(save) {
       for (var i = 0; i < categories.length; i++) {
-        value[categories[i]] = document.getElementById(pluginPrefix+'-cookie_'+categories[i]).checked;
+        if (document.getElementById(pluginPrefix+'-cookie_'+categories[i])) value[categories[i]] = document.getElementById(pluginPrefix+'-cookie_'+categories[i]).checked;
       }
     }
     gdprCookies.set(namespace, value, { expires: config.expiration, domain: config.domain });
     deleteCookies(value);
 
     // Load marketing scripts that only works when cookies are accepted
-    cookiesAcceptedEvent = new CustomEvent('gdprCookiesEnabled', {detail: value});
+    cookiesAcceptedEvent = new CustomEvent('gdprCookiesEvent', {detail: value});
     document.dispatchEvent(cookiesAcceptedEvent);
+
+  }
+
+  // Write gdpr cookie notice's cookies when user accepts cookies
+  function optOutEvent() {
+
+    var value = {
+      date: new Date(),
+      necessary: true,
+      performance: false,
+      analytics: false,
+      marketing: false
+    };
+
+    if ( config.optOut ) {
+      for (var i = 0; i < config.optOut.length; i++) {
+        value[config.optOut[i]] = true;
+      }
+    }
+
+    cookiesAcceptedEvent = new CustomEvent('gdprCookiesEvent', {detail: value});
+    setTimeout(function() {
+      document.dispatchEvent(cookiesAcceptedEvent);
+    }, 1);
+
 
   }
 
@@ -183,9 +220,9 @@ function gdprCookieNotice(config) {
 
     // Update checkboxes based on stored info(if any)
     if(currentCookieSelection) {
-      document.getElementById(pluginPrefix+'-cookie_performance').checked = currentCookieSelection.performance;
-      document.getElementById(pluginPrefix+'-cookie_analytics').checked = currentCookieSelection.analytics;
-      document.getElementById(pluginPrefix+'-cookie_marketing').checked = currentCookieSelection.marketing;
+      if (document.getElementById(pluginPrefix+'-cookie_performance')) document.getElementById(pluginPrefix+'-cookie_performance').checked = currentCookieSelection.performance;
+      if (document.getElementById(pluginPrefix+'-cookie_analytics')) document.getElementById(pluginPrefix+'-cookie_analytics').checked = currentCookieSelection.analytics;
+      if (document.getElementById(pluginPrefix+'-cookie_marketing')) document.getElementById(pluginPrefix+'-cookie_marketing').checked = currentCookieSelection.marketing;
     }
 
     // Make sure modal is only loaded once
